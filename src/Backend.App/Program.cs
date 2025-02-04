@@ -19,12 +19,12 @@ public class Program
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddApiEndpoints();
         builder.Services.AddDbContext<ApplicationDbContext>( options
-            => options.UseNpgsql(builder.Configuration.GetConnectionString("PosgresConnection")));
+            => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
         builder.Services.AddControllers();
         
         var app = builder.Build();
         if (app.Environment.IsDevelopment()) {
-            app.applMigrations();
+            app.applyMigrations();
         }
         
         app.UseAuthentication();
