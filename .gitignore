@@ -484,3 +484,4 @@ $RECYCLE.BIN/
 *.swp
 docker-entrypoint-initdb.d/UserTable.sql
 compose.yaml
+DesignDoc.txt

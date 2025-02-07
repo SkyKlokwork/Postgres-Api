@@ -9,11 +9,15 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
+            "justMyCode": false,
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/src/Backend.App/bin/Debug/net9.0/Backend.App.dll",
+            "program": "${workspaceFolder}/MessengerApp.Backend/bin/Debug/net9.0/MessengerApp.Backend.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/src/Backend.App",
+            "cwd": "${workspaceFolder}/MessengerApp.Backend",
             "stopAtEntry": false,
+            "logging": {
+                "moduleLoad": false
+            },
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
             "serverReadyAction": {
                 "action": "openExternally",
