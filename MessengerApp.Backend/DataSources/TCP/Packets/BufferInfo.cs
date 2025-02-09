@@ -2,9 +2,9 @@ using MessengerApp.Backend.TCP.Packets.Enum;
 
 namespace MessengerApp.Backend.TCP;
 
-public class PacketHeader {
+public class BufferInfo {
     int _headerEnum;
-    public PacketHeader(PacketTypeEnum num) {
+    public BufferInfo(BufferDataEnum num) {
         _headerEnum = (byte) num;
     }
 }

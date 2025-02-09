@@ -14,10 +14,8 @@ public class UnitTest1
     public async Task SocketConnection_Test() {
         var test = new ClientWebSocket();
         await test.ConnectAsync(new Uri("ws://localhost:5130/session"),CancellationToken.None);
-        var payload = new Payload(new Message("test","test","test","test")).GetPayload();
-        var buffer = new ArraySegment<byte>(Encoding.UTF8.GetBytes(payload));
+        var buffer = new BufferPayload(new Message("test","test","test","test")).ToBuffer();
         await test.SendAsync(buffer,WebSocketMessageType.Text,true,CancellationToken.None);
-        var inbuffer = new byte[1024*6];
         try {
             await test.CloseAsync(WebSocketCloseStatus.NormalClosure,"Test Complete!",default);
         }

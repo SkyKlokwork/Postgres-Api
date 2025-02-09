@@ -1,6 +1,8 @@
 using System.Net.WebSockets;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Nodes;
+using MessengerApp.Backend.Models;
 
 namespace MessengerApp.Backend.TCP;
 public class ServerSockets (ILogger<ServerSockets> logger){
@@ -16,7 +18,7 @@ public class ServerSockets (ILogger<ServerSockets> logger){
         }
     }
     public async Task Receive(WebSocket web) {
-        var buffer = new byte[1024*6];
+        var buffer = new byte[1024*10];
         while (web.State == WebSocketState.Open) {
             var result = await web.ReceiveAsync(new ArraySegment<byte>(buffer),default);
             if (result.MessageType == WebSocketMessageType.Close) {
@@ -24,10 +26,9 @@ public class ServerSockets (ILogger<ServerSockets> logger){
                 logger.LogDebug("Closing connection! {s}",result.CloseStatusDescription);
                 return;
             }
-
-
-            var payload = Encoding.UTF8.GetString(buffer[..result.Count]);
-            Payload test = Payload.FromJson(JsonObject.Parse(payload)!.AsObject());
+            var output = BufferPayload.FromBuffer(buffer[..result.Count]);
+            var message = JsonSerializer.Deserialize<Message>(output.GetBufferContent());
+            logger.LogDebug("New Message: {s}",message.Content);
         }
     }
 }
