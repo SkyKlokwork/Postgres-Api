@@ -4,15 +4,15 @@ using NetTopologySuite.Operation.Buffer;
 
 namespace MessengerApp.Backend.Models;
 public class User {
-    private string id = UniqueId.CreateUniqueId();
-    public string username;
-    private readonly string email;
-    private readonly string password;
+    private readonly string _id = UniqueId.CreateUniqueId();
+    public string _username;
+    private readonly string _email;
+    private readonly string _password;
     
     public User(string Username, string Email, string Password) {
-        username = Username;
-        email = Email;
-        password = Password;
+        _username = Username;
+        _email = Email;
+        _password = Password;
     }
     // TODO: add info grabing
     

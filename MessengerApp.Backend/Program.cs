@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using MessengerApp.Backend.Models;
+using MessengerApp.Backend.SessionModule;
 using MessengerApp.Backend.TCP;
 
 namespace MessengerApp.Backend.Main;
@@ -12,7 +13,11 @@ public class Program
         // TODO: add a custom log formatter?
         builder.Services.AddLogging();
         builder.Logging.AddConsole();
-        builder.Services.AddTransient<ServerSockets>();
+        builder.Services
+            .AddHttpContextAccessor()
+            .AddScoped<Session>()
+            .AddTransient<WSocketConnection>()
+            .AddSingleton<SessionCache>();
 
     
         var app = builder.Build();
@@ -25,9 +30,10 @@ public class Program
             KeepAliveInterval = TimeSpan.FromMinutes(2)
         };
         app.UseWebSockets(socketOptions);
-        app.Map("/session", async (
+        app.Map("/", async (
             HttpContext context,
-            ServerSockets webSocket
+            Session session,
+            WSocketConnection webSocket
             ) => {
                 if (context.WebSockets.IsWebSocketRequest) {
                     await webSocket.Open(context);

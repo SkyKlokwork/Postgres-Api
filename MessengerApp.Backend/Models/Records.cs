@@ -1,6 +1,4 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Text.Json.Serialization;
-using MessengerApp.Backend.TCP.Packets.Enum;
 
 namespace MessengerApp.Backend.Models;
 public record Message(
@@ -11,7 +9,6 @@ public record Message(
     string Author_id,
     bool Edited = false
 );
-public record Session(string UserId) {
-    public required string sessionId;
-    public required JwtSecurityToken token;
-};
+public record Ping(
+    string Author_id
+);
