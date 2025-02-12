@@ -1,10 +1,7 @@
 ﻿using System.Net.WebSockets;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using MessengerApp.Backend.ClientConnections;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Xunit.Sdk;
+using System.Text.Json;
+using MessengerApp.Backend.Models;
+using MessengerApp.Backend.TCP;
 
 namespace MessengerApp.Backend.Tests;
 
@@ -13,14 +10,19 @@ public class UnitTest1
 
     [Fact]
     public async Task SocketConnection_Test() {
-        var ws = new ClientWebSocket();
-        await ws.ConnectAsync(new Uri("ws://localhost:5130/chat"),CancellationToken.None);
+        var client = new ClientWebSocket();
+        await client.ConnectAsync(new Uri("ws://localhost:5130/"),CancellationToken.None);
+        var buffer = new BufferContent(BufferDataEnum.BUFFER_TYPE_CHAT,JsonSerializer.SerializeToElement(new Message("test","test","test","test"))).ToBuffer();
+        for(int i = 0; i< 5; i++) {
+            await client.SendAsync(buffer,WebSocketMessageType.Text,true,CancellationToken.None);
+        }
         try {
-            await ws.CloseAsync(WebSocketCloseStatus.NormalClosure,"Test Complete",default);
-            Assert.True(true, "Connection Completed");
-            return;
-        } catch (WebSocketException e) {
-            Assert.Fail($"Connection Test Failed! {e}");
+            await Task.Delay(100);
+            await client.CloseAsync(WebSocketCloseStatus.NormalClosure,"Test Complete!",default);
+        }
+        catch (WebSocketException e) {
+            Console.WriteLine(e.Message);
+            Assert.Fail();
         }
     } 
 }
