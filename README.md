@@ -1,3 +1,2 @@
-# Postgres-API
-An example app to learn Postgres and how to write a Dotnet 8/9 Web Api to interact with it.
-Includes authenticating user connections.
+# Live-Chat-API
+An example project meant to learn dotnet 8/9, Postgres, and Redis.
