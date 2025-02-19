@@ -16,7 +16,9 @@ public class Program
         builder.Services.AddLogging();
         builder.Logging.AddConsole();
         builder.Services
-            .AddTransient<WSocketHandler>();
+            .AddSingleton<PackageEvents>()
+            .AddSingleton<SessionCache>()
+            .AddTransient<WSHandler>();
         var app = builder.Build();
         if(Debugger.IsAttached) {
             
@@ -25,7 +27,7 @@ public class Program
             KeepAliveInterval = TimeSpan.FromMinutes(2)
         };
         app.UseWebSockets(socketOptions);
-        app.UseMiddleware<WSocketMiddleware>();
+        app.UseMiddleware<OnConnection>();
         app.Run();
     }
 }
