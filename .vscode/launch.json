@@ -9,11 +9,10 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "justMyCode": false,
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/MessengerApp.Backend/bin/Debug/net9.0/MessengerApp.Backend.dll",
+            "program": "${workspaceFolder}/InstantChatService.Backend/bin/Debug/net9.0/InstantChatService.Backend.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/MessengerApp.Backend",
+            "cwd": "${workspaceFolder}/InstantChatService.Backend",
             "stopAtEntry": false,
             "logging": {
                 "moduleLoad": false
