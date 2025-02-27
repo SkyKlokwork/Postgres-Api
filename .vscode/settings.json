@@ -4,7 +4,8 @@
         "logging": {
             "programOutput": true,
             "moduleLoad": false,
-            "processExit": true
-        }
-    }
+            "processExit": true,
+            "exceptions": true
+        },
+    },
 }

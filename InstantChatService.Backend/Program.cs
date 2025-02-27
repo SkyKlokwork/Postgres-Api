@@ -1,5 +1,6 @@
 using System.Net.Sockets;
 using Klokwork.ChatApp.DataSources.Client;
+using Klokwork.ChatApp.DataSources.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 public class Program
@@ -11,6 +12,10 @@ public class Program
         builder.Services
             .AddOptions()
             .Configure<ClientSocketOptions>(options => {})
+            .AddTransient<IRequestHandler<RoutingComponent>,CreateChannelHandler>()
+            .AddTransient<ChatHub>()
+            .AddSingleton<HubCollector>()
+            .AddSingleton<CreateChannelHandler>()
             .AddSingleton<ClientCache>();
         var app = builder.Build();
         app.UseHttpsRedirection();

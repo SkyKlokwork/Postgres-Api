@@ -3,16 +3,25 @@ using System.Text.Json.Nodes;
 
 namespace Klokwork.ChatApp.DataSources.Client;
 public class Packet {
-    public Byte Type {get; set;}
+    public PacketType Type {get; set;}
+    // TODO: clean up
     // object is pretty generic
     // will likely run into issues converting back from the data stream
     public JsonElement Payload {get; set;}
     public Packet(PacketType type, object payload) {
-        Type = (byte) type;
+        Type = type;
         Payload = JsonSerializer.SerializeToElement(payload);
     }
     public Packet(PacketType type, JsonElement payload) {
-        Type = (byte) type;
+        Type = type;
+        Payload = payload;
+    }
+    public Packet(byte type, object payload) {
+        Type = (PacketType)type;
+        Payload = JsonSerializer.SerializeToElement(payload);
+    }
+    public Packet(byte type, JsonElement payload) {
+        Type = (PacketType)type;
         Payload = payload;
     }
     public JsonObject ToJson() => JsonSerializer.SerializeToNode<Packet>(this)!.AsObject();
