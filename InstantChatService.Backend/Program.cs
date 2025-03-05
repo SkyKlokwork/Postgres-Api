@@ -1,7 +1,6 @@
-using System.Net.Sockets;
-using Klokwork.ChatApp.DataSources.Client;
-using Klokwork.ChatApp.DataSources.Hubs;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text.Json;
+using Klokwork.ChatApp.DataSources.SignalR;
+using Microsoft.AspNetCore.Http.Connections;
 
 public class Program
 {
@@ -10,22 +9,23 @@ public class Program
         Environment.SetEnvironmentVariable("DOTNET_hostBuilder:reloadConfigOnChange","false");
         var builder = WebApplication.CreateBuilder(args);
         builder.Services
-            .AddOptions()
-            .Configure<ClientSocketOptions>(options => {})
-            .AddTransient<IRequestHandler<RoutingComponent>,CreateChannelHandler>()
-            .AddTransient<ChatHub>()
-            .AddSingleton<HubCollector>()
-            .AddSingleton<CreateChannelHandler>()
-            .AddSingleton<ClientCache>();
+            .AddSignalR(huboptions => {
+                huboptions.EnableDetailedErrors = true;
+                huboptions.ClientTimeoutInterval = TimeSpan.FromMinutes(2);
+                huboptions.KeepAliveInterval = TimeSpan.FromMinutes(2);
+                huboptions.SupportedProtocols = new List<string> { "websocket" };
+            })
+                .AddJsonProtocol(options => {
+                    options.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                });
         var app = builder.Build();
         app.UseHttpsRedirection();
-        var wsoptions = new WebSocketOptions {
-            KeepAliveInterval = TimeSpan.FromMinutes(1),
-            
-        };
-        app.UseWebSockets(wsoptions);
-        app.UseClientManager();
         app.UseRouting();
+        app.MapHub<MainHub>("/channel", options => {
+            options.Transports = HttpTransportType.WebSockets | HttpTransportType.ServerSentEvents;
+            options.ApplicationMaxBufferSize = 1024 * 10;
+            options.TransportMaxBufferSize = 1024 * 10;
+        });
         app.Run();
     }
 }
